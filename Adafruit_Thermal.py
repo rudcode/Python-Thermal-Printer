@@ -550,7 +550,16 @@ class Adafruit_Thermal(Serial):
 				chunkHeight = maxChunkHeight
 
 			# Timeout wait happens here
-			self.writeBytes(18, 42, chunkHeight, rowBytesClipped)
+			self.writeBytes(
+			 29,
+			 118,
+			 48,
+			 0,
+			 rowBytesClipped & 0xFF,
+			 rowBytesClipped >> 8,
+			 chunkHeight & 0xFF,
+			 chunkHeight >> 8
+			)
 
 			for y in range(chunkHeight):
 				for x in range(rowBytesClipped):
@@ -560,7 +569,6 @@ class Adafruit_Thermal(Serial):
 						super(Adafruit_Thermal,
 						  self).write(bytes([bitmap[i]]))
 					i += 1
-				i += rowBytes - rowBytesClipped
 			self.timeoutSet(chunkHeight * self.dotPrintTime)
 
 		self.prevByte = '\n'
